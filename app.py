@@ -1,6 +1,15 @@
 from flask import Flask
 app=Flask(__name__)
-@app.route("/")
-def home():return"<h1>Deploy Platform LIVE!</h1>",{"Content-Type":"text/html"}
-@app.route("/health")
-def hh():return{"s":"ok"},200
+import routes,views
+app.route('/',{{'GET':'views.home'})
+app.route('/e/<i>',{{'GET':'views.edit'})
+app.route('/s/<i>/',{'GET':'views.serve_app', 'defaults':{'sp':''}})
+app.route('/s/<i>/<path:sp>',{'GET':'views.serve_app'})
+app.route('/api/p')(routes.list_projects)
+app.route('/api/p')(routes.create_project)
+app.route('/api/p/<i>')(routes.delete_project)
+app.route('/api/p/<i>/tg')(routes.toggle_project)
+app.route('/api/p/<i>/dp')(routes.deploy_project)
+app.route('/api/p/<i>/f/<path:fp>')(routes.get_file)
+app.route('/api/p/<i>/f/<path:fp>', {'PUT':'routes.save_file'})
+app.route('/health')(routes.health)
